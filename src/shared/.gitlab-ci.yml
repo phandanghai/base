@@ -1,0 +1,49 @@
+image: alpine:3.19
+
+stages:
+  - sync
+
+sync_shared_to_base:
+  stage: sync
+  only:
+    - main
+
+  before_script:
+    - apk add --no-cache git git-subtree openssh bash
+    - git config --global user.email "ci-bot@gitlab.com"
+    - git config --global user.name "shared-ci-bot"
+
+  script:
+    - echo "🚀 Start syncing shared → base"
+
+    # Clone base repo (write access)
+    - git clone https://oauth2:${BASE_PUSH_TOKEN}@${BASE_REPO_URL} base_repo
+    - cd base_repo
+
+    # Add shared remote (read access)
+    - git remote add shared https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git
+    - git fetch shared
+
+    # Init or update subtree
+    - |
+      if [ ! -d "${SUBTREE_PREFIX}" ]; then
+        echo "🆕 ${SUBTREE_PREFIX} not found → init subtree"
+        git subtree add \
+          --prefix=${SUBTREE_PREFIX} \
+          shared ${CI_COMMIT_BRANCH} \
+          --squash
+        git push origin ${BASE_BRANCH}
+      else
+        echo "🔄 ${SUBTREE_PREFIX} exists → pull updates"
+        git subtree pull \
+          --prefix=${SUBTREE_PREFIX} \
+          shared ${CI_COMMIT_BRANCH} \
+          --squash
+
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "chore(shared): sync updates [skip ci]"
+          git push origin ${BASE_BRANCH}
+        else
+          echo "ℹ️ No changes to sync"
+        fi
+      fi
