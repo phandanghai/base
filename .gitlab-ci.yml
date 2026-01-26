@@ -14,44 +14,38 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules/
+    - .pnpm-store
 
+# ✅ GLOBAL before_script (ĐÚNG CẤU TRÚC)
 before_script:
-  before_script:
-    - node -v
-    - npm -v
-    - corepack enable
-    - corepack prepare pnpm@9.12.0 --activate
-    - pnpm -v
+  - node -v
+  - npm -v
+  - corepack enable
+  - corepack prepare pnpm@9.12.0 --activate
+  - pnpm -v
 
 install_dependencies:
   stage: prepare
-
-  before_script:
-    - node -v
-    - npm -v
-    - corepack enable
-    - corepack prepare pnpm@9.12.0 --activate
-    - pnpm -v
-
   script:
     - pnpm install --frozen-lockfile
   artifacts:
     paths:
       - node_modules/
+
 lint:
   stage: lint
   script:
-    - npm run lint
+    - pnpm run lint
 
 test:
   stage: test
   script:
-    - npm run test
+    - pnpm run test
 
 build:
   stage: build
   script:
-    - npm run build
+    - pnpm run build
   artifacts:
     paths:
       - dist/
