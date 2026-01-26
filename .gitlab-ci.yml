@@ -25,6 +25,14 @@ before_script:
 
 install_dependencies:
   stage: prepare
+
+  before_script:
+    - node -v
+    - npm -v
+    - corepack enable
+    - corepack prepare pnpm@9.12.0 --activate
+    - pnpm -v
+
   script:
     - node -v
     - npm -v
