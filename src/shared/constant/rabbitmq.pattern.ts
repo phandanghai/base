@@ -14,10 +14,10 @@ import {
   UpdatePasswordUserPayload,
   UpdateUserPayload,
   VerifyOtpPayload,
-} from '@/interface';
+} from '@/shared/interface';
 import { RABBITMQ_QUEUE } from './rabbitmq.queue';
-import { User } from '@/schema/user.schema';
-import { definePattern } from '@/helper';
+import { User } from '@/shared/interface/model.interface';
+import { definePattern } from '@/shared/helper';
 
 export const RABBIT_PATTERN = {
   USER: {
@@ -27,7 +27,10 @@ export const RABBIT_PATTERN = {
       description: 'Create new user in database successfully',
     }),
 
-    GET_USER_BY_FIELD: definePattern<Array<{ field: string; value: string }>, User | null>()({
+    GET_USER_BY_FIELD: definePattern<
+      Array<{ field: string; value: string }>,
+      User | null
+    >()({
       pattern: 'USER.GET_USER_BY_FIELD',
       queue: RABBITMQ_QUEUE.USER_CLIENT,
       description: 'Get user by field successfully ...',
@@ -39,7 +42,10 @@ export const RABBIT_PATTERN = {
       description: 'Update user information',
     }),
 
-    UPDATE_PASSWORD_USER_BY_ID: definePattern<UpdatePasswordUserPayload, User>()({
+    UPDATE_PASSWORD_USER_BY_ID: definePattern<
+      UpdatePasswordUserPayload,
+      User
+    >()({
       pattern: 'USER.UPDATE_PASSWORD_USER',
       queue: RABBITMQ_QUEUE.USER_CLIENT,
       description: 'Update password user successfully ...',

@@ -1,7 +1,12 @@
-import { ExecutionContext, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from '@/decorators';
+import { IS_PUBLIC_KEY } from '@/shared/decorator';
 
 interface JwtUser {
   id: string;

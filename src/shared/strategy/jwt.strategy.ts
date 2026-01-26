@@ -2,7 +2,7 @@ import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtPayload } from '@/interface';
+import { JwtPayload } from '@/shared/interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -11,7 +11,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly configService: ConfigService) {
     const secret = configService.get<string>('ACCESS_TOKEN_KEY');
     if (!secret) {
-      throw new BadGatewayException('ACCESS_TOKEN_KEY is not defined in environment variables');
+      throw new BadGatewayException(
+        'ACCESS_TOKEN_KEY is not defined in environment variables',
+      );
     }
 
     super({

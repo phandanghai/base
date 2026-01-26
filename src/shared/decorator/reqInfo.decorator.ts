@@ -1,7 +1,7 @@
 // common/decorators/request-context.decorator.ts
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { Request } from "express";
-import { RequestContext as ReqCtx } from "@/interface";
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { Request } from 'express';
+import { RequestContext as ReqCtx } from '@/shared/interface';
 
 export const ReqContext = createParamDecorator(
   (_: unknown, ctx: ExecutionContext): ReqCtx => {
@@ -9,14 +9,14 @@ export const ReqContext = createParamDecorator(
 
     return {
       ip:
-        request.headers["x-forwarded-for"]?.toString() ??
+        request.headers['x-forwarded-for']?.toString() ??
         request.socket.remoteAddress ??
-        "",
-      userAgent: request.headers["user-agent"],
+        '',
+      userAgent: request.headers['user-agent'],
       method: request.method,
       url: request.originalUrl,
-      requestId: request.headers["x-request-id"],
-      deviceId: request.headers["deviceid"] as string,
+      requestId: request.headers['x-request-id'] as string,
+      deviceId: request.headers['deviceid'] as string,
     };
   },
 );

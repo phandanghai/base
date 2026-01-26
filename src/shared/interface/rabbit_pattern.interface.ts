@@ -1,4 +1,4 @@
-import { User } from '@/schema/user.schema';
+import { User } from './model.interface';
 
 // Define specific response types for better type safety
 
@@ -15,10 +15,18 @@ export interface RmqMessage<
   description?: string;
 }
 
-export type RmqModuleContract = Record<string, RmqMessage<string, unknown, unknown, string>>;
+export type RmqModuleContract = Record<
+  string,
+  RmqMessage<string, unknown, unknown, string>
+>;
 
 export type RmqContract = {
-  [K in 'USER' | 'AUTH' | 'WALLET' | 'TRANSACTION' | 'REDIS']: RmqModuleContract;
+  [K in
+    | 'USER'
+    | 'AUTH'
+    | 'WALLET'
+    | 'TRANSACTION'
+    | 'REDIS']: RmqModuleContract;
 };
 
 export interface RabbitPatternInterface {

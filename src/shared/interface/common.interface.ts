@@ -51,6 +51,18 @@ export interface RequestContext {
   requestId?: string;
 }
 
-export type ExtractPayload<T> = T extends { __payloadType?: infer P } ? P : never;
+export interface RpcErrorPayload {
+  statusCode?: number;
+  message?: string;
+  errorType?: string;
+  source?: string;
+  stack?: string;
+}
 
-export type ExtractResponse<T> = T extends { __responseType?: infer R } ? R : never;
+export type ExtractPayload<T> = T extends { __payloadType?: infer P }
+  ? P
+  : never;
+
+export type ExtractResponse<T> = T extends { __responseType?: infer R }
+  ? R
+  : never;
