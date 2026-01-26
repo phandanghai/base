@@ -12,8 +12,6 @@ export default tseslint.config(
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
-        project: './tsconfig.json',
-        tsconfigRootDir: __dirname,
       },
     },
     rules: {
@@ -76,6 +74,9 @@ export default tseslint.config(
       '*.js',
       '*.mjs',
       'eslint.config.mjs',
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/coverage/**',
     ],
   },
 );

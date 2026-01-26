@@ -5,8 +5,8 @@ import {
   ErrorInterceptor,
   TimeoutInterceptor,
   ResponseInterceptor,
+  MsExceptionFilter,
 } from '@shared';
-import { MsExceptionFilter } from '@shared';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 
@@ -64,7 +64,7 @@ async function bootstrap() {
     } catch (error) {
       Logger.warn(
         '⚠️  RabbitMQ not available in development mode:',
-        error.message,
+        error instanceof Error ? error.message : String(error),
       );
       Logger.log('📝 HTTP API is still available for testing');
     }

@@ -44,7 +44,7 @@ export class MsExceptionFilter implements ExceptionFilter {
         pattern =
           typeof patternResult === 'string'
             ? patternResult
-            : String(patternResult);
+            : JSON.stringify(patternResult);
       }
     } catch (error) {
       throwError(() => error);
