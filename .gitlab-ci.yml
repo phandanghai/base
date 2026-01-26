@@ -22,7 +22,7 @@ before_script:
 install_dependencies:
   stage: prepare
   script:
-    - npm ci
+    - pnpm install --frozen-lockfile
   artifacts:
     paths:
       - node_modules/
