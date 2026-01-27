@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@shared/*": ["packages/shared/src/*"],
-      "@shared": ["packages/shared/src"]
-    }
+    "baseUrl": "./"
   },
   "include": [],
   "references": [
@@ -13,7 +9,7 @@
       "path": "./apps/api"
     },
     {
-      "path": "./packages/shared"
+      "path": "./packages"
     }
   ]
 }
