@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "pnpm run build:shared && pnpm run build:api",
-    "build:shared": "cd packages/shared && pnpm run build",
+    "build:shared": "cd packages && pnpm run build",
     "build:api": "cd apps/api && pnpm run build",
     "dev": "pnpm -r --parallel dev",
     "start": "cd apps/api && pnpm run start",
