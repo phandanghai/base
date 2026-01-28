@@ -10,10 +10,14 @@ export class RabbitMQService {
   private readonly breaker = new CircuitBreaker(5, 60_000);
 
   constructor(
-    @Inject(RMQ_SERVICE.USER) private readonly userClient: ClientProxy,
-    @Inject(RMQ_SERVICE.AUTH) private readonly authClient: ClientProxy,
-    @Inject(RMQ_SERVICE.REDIS) private readonly redisClient: ClientProxy,
-    @Inject(RMQ_SERVICE.MAILER) private readonly mailerClient: ClientProxy,
+    @Inject(RMQ_SERVICE.USER)
+    private readonly userClient: ClientProxy,
+    @Inject(RMQ_SERVICE.AUTH)
+    private readonly authClient: ClientProxy,
+    @Inject(RMQ_SERVICE.REDIS)
+    private readonly redisClient: ClientProxy,
+    @Inject(RMQ_SERVICE.MAILER)
+    private readonly mailerClient: ClientProxy,
   ) {}
 
   private getClientByPattern(pattern: string): ClientProxy {
