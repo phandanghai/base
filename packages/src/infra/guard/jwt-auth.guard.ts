@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from '@shared';
+import { IS_PUBLIC_KEY } from '../../common/decorator';
 
 interface JwtUser {
   id: string;

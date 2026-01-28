@@ -2,8 +2,8 @@
   "name": "@base/shared",
   "version": "0.0.1",
   "description": "Shared utilities and components",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -w -p tsconfig.build.json",

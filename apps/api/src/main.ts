@@ -6,7 +6,7 @@ import {
   TimeoutInterceptor,
   ResponseInterceptor,
   MsExceptionFilter,
-} from '@shared';
+} from '@base/shared';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 
