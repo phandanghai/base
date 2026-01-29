@@ -22,29 +22,32 @@ sync:packages:
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
 
-    # ép SSH
+    # ép toàn bộ https → ssh
     - git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
 
     - git config --global user.email "ci@gitlab.com"
     - git config --global user.name "gitlab-ci"
 
   script:
-    - set -e # ❗ rất quan trọng
+    - set -e
 
     - git clone git@gitlab.com:chienbinhthephai/packages.git ../tmp-packages
 
-    - test -d ../tmp-packages/.git || {
-      echo "❌ Clone failed, .git not found"
-      exit 1
-      }
+    - |
+      if [ ! -d ../tmp-packages/.git ]; then
+        echo "❌ Clone failed: .git not found"
+        exit 1
+      fi
 
     - rsync -av --delete packages/ ../tmp-packages/
 
     - |
       git -C ../tmp-packages status --porcelain
 
-      git -C ../tmp-packages diff --quiet || {
+      if ! git -C ../tmp-packages diff --quiet; then
         git -C ../tmp-packages add .
         git -C ../tmp-packages commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
         git -C ../tmp-packages push origin main
-      }
+      else
+        echo "✅ No changes to sync"
+      fi
