@@ -25,18 +25,13 @@ sync:packages:
     - git config --global user.email "ci@gitlab.com"
     - git config --global user.name "gitlab-ci"
 
-  script:
-    # Clone repo packages
-    - git clone https://gitlab.com/chienbinhthephai/packages.git ../tmp-packages
-
-    # Sync packages
-    - rsync -av --delete packages/ ../tmp-packages/
-
-    # Commit only if changed
-    - cd ../tmp-packages
-    - |
-      git diff --quiet || {
-        git add .
-        git commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
-        git push origin phandanghai
-      }
+script:
+  - git clone git@gitlab.com:chienbinhthephai/packages.git ../tmp-packages
+  - rsync -av --delete packages/ ../tmp-packages/
+  - cd ../tmp-packages
+  - |
+    git diff --quiet || {
+      git add .
+      git commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
+      git push origin main
+    }
