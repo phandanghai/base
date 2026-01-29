@@ -1,98 +1,42 @@
-image: node:24-alpine
+image: alpine:latest
 
 stages:
-  - prepare
-  - lint
-  - test
-  - build
-  - release
-  - deploy
+  - sync
 
 variables:
-  NPM_CONFIG_LOGLEVEL: warn
-  PNPM_CACHE_FOLDER: .pnpm-store
+  GIT_STRATEGY: fetch
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-    - .pnpm-store
-    - apps/*/node_modules/
-    - packages/*/node_modules/
-
-# ✅ GLOBAL before_script (ĐÚNG CẤU TRÚC)
-before_script:
-  - node -v
-  - npm -v
-  - corepack enable
-  - corepack prepare pnpm@10.28.1 --activate
-  - pnpm config set store-dir .pnpm-store
-  - pnpm -v
-
-install_dependencies:
-  stage: prepare
-  script:
-    - echo "Installing dependencies..."
-    - pnpm install --frozen-lockfile
-    - echo "Checking workspace structure..."
-    - pnpm list --depth=0
-    - echo "Checking if shared package is built..."
-    - ls -la packages/shared/ || echo "Shared package directory not found"
-  artifacts:
-    paths:
-      - node_modules/
-      - apps/*/node_modules/
-      - packages/*/node_modules/
-    expire_in: 1 hour
-
-lint:
-  stage: lint
-  dependencies:
-    - install_dependencies
-  script:
-    - echo "Running lint..."
-    - pnpm run lint
-    - echo "Lint completed successfully"
-
-test:
-  stage: test
-  dependencies:
-    - install_dependencies
-  script:
-    - echo "No test ..."
-
-build:
-  stage: build
-  dependencies:
-    - install_dependencies
-  script:
-    - echo "Starting build process..."
-    - echo "Building shared package..."
-    - pnpm run build:shared
-    - echo "Building API..."
-    - pnpm run build:api
-    - echo "Build completed successfully"
-  artifacts:
-    paths:
-      - apps/*/dist/
-      - packages/*/dist/
-    expire_in: 1 week
-
-release:
-  stage: release
+sync:packages:
+  stage: sync
   rules:
-    - if: '$CI_COMMIT_TAG'
-  script:
-    - echo "Release $CI_COMMIT_TAG ready"
-
-deploy:
-  stage: deploy
-  when: manual
-  rules:
-    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - packages/**/*
   before_script:
-    - npm install -g @railway/cli
+    - apk add --no-cache git rsync openssh
+
+    # Setup SSH
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+
+    # Git identity
+    - git config --global user.email "ci@gitlab.com"
+    - git config --global user.name "gitlab-ci"
+
   script:
-    - railway login --token $RAILWAY_TOKEN
-    - railway link $RAILWAY_PROJECT_ID
-    - railway up --environment $RAILWAY_ENV_ID
+    # Clone repo packages
+    - git clone https://gitlab.com/chienbinhthephai/packages.git ../tmp-packages
+
+    # Sync packages
+    - rsync -av --delete packages/ ../tmp-packages/
+
+    # Commit only if changed
+    - cd ../tmp-packages
+    - |
+      git diff --quiet || {
+        git add .
+        git commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
+        git push origin phandanghai
+      }
