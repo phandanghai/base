@@ -29,18 +29,22 @@ sync:packages:
     - git config --global user.name "gitlab-ci"
 
   script:
+    - set -e # ❗ rất quan trọng
+
     - git clone git@gitlab.com:chienbinhthephai/packages.git ../tmp-packages
+
+    - test -d ../tmp-packages/.git || {
+      echo "❌ Clone failed, .git not found"
+      exit 1
+      }
+
     - rsync -av --delete packages/ ../tmp-packages/
+
     - |
-      cd ../tmp-packages
+      git -C ../tmp-packages status --porcelain
 
-      # kiểm tra chắc chắn đang ở repo
-      test -d .git || { echo "Not a git repo"; exit 1; }
-
-      git status --porcelain
-
-      git diff --quiet || {
-        git add .
-        git commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
-        git push origin main
+      git -C ../tmp-packages diff --quiet || {
+        git -C ../tmp-packages add .
+        git -C ../tmp-packages commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
+        git -C ../tmp-packages push origin main
       }
