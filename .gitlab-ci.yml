@@ -31,10 +31,9 @@ sync:packages:
   script:
     - git clone git@gitlab.com:chienbinhthephai/packages.git ../tmp-packages
     - rsync -av --delete packages/ ../tmp-packages/
-    - cd ../tmp-packages
     - |
-      git diff --quiet || {
-        git add .
-        git commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
-        git push origin main
+      git -C ../tmp-packages diff --quiet || {
+        git -C ../tmp-packages add .
+        git -C ../tmp-packages commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
+        git -C ../tmp-packages push origin main
       }
