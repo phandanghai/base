@@ -16,24 +16,7 @@ sync:packages:
 
   before_script:
     - apk add --no-cache git rsync openssh
-
-    # Setup SSH
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-
-    # Git identity
-    - git config --global user.email "ci@gitlab.com"
-    - git config --global user.name "gitlab-ci"
-
   script:
-    - git clone git@gitlab.com:chienbinhthephai/packages.git ../tmp-packages
-    - rsync -av --delete packages/ ../tmp-packages/
-    - cd ../tmp-packages
-    - |
-      git diff --quiet || {
-        git add .
-        git commit -m "chore(packages): sync from base @${CI_COMMIT_SHORT_SHA}"
-        git push origin main
-      }
+    - set -e
+    - echo "Script action ..."
+      fi
