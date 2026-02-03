@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@nestjs/platform-express": "^11.1.12"
   }
 }
