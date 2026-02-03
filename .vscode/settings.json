@@ -1,4 +1,11 @@
 {
+<<<<<<< HEAD
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+=======
   "postman.settings.dotenv-detection-notification-visibility": false,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -13,4 +20,5 @@
   },
   "eslint.enable": true,
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
+>>>>>>> 16ae6a604a1e4f65a8de7fae11979e71a7719f7d
 }

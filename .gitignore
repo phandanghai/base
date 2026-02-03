@@ -1,10 +1,8 @@
 # compiled output
 /dist
-dist/
 /node_modules
-node_modules/
+/packages/shared/node_modules
 /build
-build/
 
 # Logs
 logs
@@ -21,7 +19,10 @@ lerna-debug.log*
 # Tests
 /coverage
 /.nyc_output
+<<<<<<< HEAD
+=======
 coverage/
+>>>>>>> 16ae6a604a1e4f65a8de7fae11979e71a7719f7d
 
 # IDEs and editors
 /.idea
@@ -58,6 +59,8 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+<<<<<<< HEAD
+=======
 
 # Package manager files
 pnpm-lock.yaml
@@ -66,3 +69,4 @@ package-lock.json
 
 # TypeScript build info
 *.tsbuildinfo
+>>>>>>> 16ae6a604a1e4f65a8de7fae11979e71a7719f7d
