@@ -1,6 +1,6 @@
-import js from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import prettier from 'eslint-config-prettier'
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier';
 
 export default [
   js.configs.recommended,
@@ -36,4 +36,4 @@ export default [
 
   // 🚨 LUÔN ĐỂ CUỐI → tắt toàn bộ rule format
   prettier,
-]
+];
