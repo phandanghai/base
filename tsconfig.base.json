@@ -17,8 +17,8 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@base/shared": ["packages/src/index"],
-      "@base/shared/*": ["packages/src/*"]
+      "@base/shared": ["packages/shared/src/index"],
+      "@base/shared/*": ["packages/shared/src/*"]
     }
   }
 }
