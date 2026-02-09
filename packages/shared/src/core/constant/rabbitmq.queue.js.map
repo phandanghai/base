@@ -1,0 +1,1 @@
+{"version":3,"file":"rabbitmq.queue.js","sourceRoot":"","sources":["rabbitmq.queue.ts"],"names":[],"mappings":";;;AAAa,QAAA,cAAc,GAAG;IAC5B,UAAU,EAAE,gBAAgB;IAC5B,WAAW,EAAE,YAAY;IACzB,aAAa,EAAE,eAAe;IAC9B,WAAW,EAAE,YAAY;IACzB,YAAY,EAAE,aAAa;IAC3B,aAAa,EAAE,cAAc;IAC7B,kBAAkB,EAAE,mBAAmB;CACxC,CAAC"}

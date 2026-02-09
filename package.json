@@ -7,11 +7,11 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "pnpm run build:shared && pnpm run build:api",
-    "build:shared": "cd packages && pnpm run build",
+    "build:shared": "cd packages/shared && pnpm run build",
     "build:api": "cd apps/api && pnpm run build",
     "dev": "pnpm -r --parallel dev",
     "start": "cd apps/api && pnpm run start",
-    "start:dev": "cd apps/api && pnpm run start",
+    "start:dev": "pnpm run build && cd apps/api && pnpm run start:dev",
     "start:prod": "cd apps/api && pnpm run start:prod",
     "lint": "eslint \"{apps,packages}/**/*.ts\" --fix",
     "format": "prettier --write \"{apps,packages}/**/*.ts\"",
