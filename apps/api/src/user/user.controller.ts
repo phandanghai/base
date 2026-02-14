@@ -8,6 +8,8 @@ export class UserCotroller {
 
   @Post('test')
   testRequest(@Body() body: unknown) {
-    return body;
+    return {
+      body,
+    };
   }
 }
