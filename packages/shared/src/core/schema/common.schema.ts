@@ -34,7 +34,9 @@ export const PaginatedResponseSchema = z.object({
 
 // ID validation schemas
 export const UUIDSchema = z.string().uuid('Invalid UUID format');
-export const ObjectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId format');
+export const ObjectIdSchema = z
+  .string()
+  .regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId format');
 
 // Common field schemas
 export const EmailSchema = z.string().email('Invalid email format');
@@ -45,7 +47,9 @@ export const PasswordSchema = z
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
     'Password must contain at least one uppercase letter, one lowercase letter, and one number',
   );
-export const PhoneSchema = z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format');
+export const PhoneSchema = z
+  .string()
+  .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format');
 export const URLSchema = z.string().url('Invalid URL format');
 
 // Types
@@ -55,7 +59,10 @@ export type Pagination = z.infer<typeof PaginationSchema>;
 export type PaginatedResponse = z.infer<typeof PaginatedResponseSchema>;
 
 // Utility functions
-export const createSuccessResponse = (message: string, data?: unknown): SuccessResponse => ({
+export const createSuccessResponse = (
+  message: string,
+  data?: unknown,
+): SuccessResponse => ({
   success: true,
   message,
   data,
@@ -83,3 +90,15 @@ export const createPaginatedResponse = (
   pagination,
   timestamp: new Date().toISOString(),
 });
+
+export const testSchema = z.object({
+  label: z.string({
+    message: 'Label must be string ...',
+  }),
+  value: z.string({
+    message: 'Value must be string ...',
+  }),
+});
+
+export type testDto = z.infer<typeof testSchema>;
+export const validateTestSchema = (data: unknown) => testSchema.parse(data);
