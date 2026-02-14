@@ -1,5 +1,6 @@
 import { RmqOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { UnauthorizedException } from '@nestjs/common';
 
 export interface RmqServiceConfig {
   name: string;
@@ -14,17 +15,29 @@ export const RMQ_SERVICES: RmqServiceConfig[] = [
   { name: 'MAILER_SERVICE', queue: 'MAILER_QUEUE', prefetchCount: 15 },
 ];
 
-export const createRmqOptions = (configService: ConfigService, serviceName: string): RmqOptions => {
+export const createRmqOptions = (
+  configService: ConfigService,
+  serviceName: string,
+): RmqOptions => {
   const service = RMQ_SERVICES.find((s) => s.name === serviceName);
+  const rabbitmqURL = configService.get<string>('RABBITMQ_URL');
 
   if (!service) {
-    throw new Error(`RMQ service config not found: ${serviceName}`);
+    throw new UnauthorizedException(
+      `RMQ service config not found: ${serviceName}`,
+    );
+  }
+
+  if (!rabbitmqURL) {
+    throw new UnauthorizedException(
+      `RMQ URL service config not found or not exist : , ${rabbitmqURL}`,
+    );
   }
 
   return {
     transport: Transport.RMQ,
     options: {
-      urls: [configService.get<string>('RABBITMQ_URL') ?? 'amqp://localhost:5672'],
+      urls: [configService.get<string>('RABBITMQ_URL')],
       queue: service.queue,
       queueOptions: { durable: true },
       prefetchCount: service.prefetchCount ?? 10,
