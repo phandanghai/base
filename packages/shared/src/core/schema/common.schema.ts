@@ -101,4 +101,5 @@ export const testSchema = z.object({
 });
 
 export type testDto = z.infer<typeof testSchema>;
+
 export const validateTestSchema = (data: unknown) => testSchema.parse(data);
