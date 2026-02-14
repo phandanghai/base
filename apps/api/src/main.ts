@@ -17,7 +17,7 @@ async function bootstrap() {
   const rabbitmqUrl = config.get<string>('RABBITMQ_URL');
   const rabbitmqQueue = config.get<string>('RABBITMQ_QUEUE');
   const globalTimeout = config.get<number>('GLOBAL_TIMEOUT') ?? 10000; // 10 seconds default
-  const port = config.get<number>('PORT') ?? 3000;
+  const port = config.get<string | number>('PORT') ?? 8888;
 
   // Setup global interceptors and filters
   app.useGlobalInterceptors(new TimeoutInterceptor(globalTimeout)); // Apply timeout first
