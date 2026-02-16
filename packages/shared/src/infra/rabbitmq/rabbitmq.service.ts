@@ -52,12 +52,31 @@ export class RabbitMQService {
       const client = this.getClientByPattern(pattern);
 
       this.logger.debug(`📤 RMQ send → ${pattern}`);
+      this.logger.debug(`📦 Payload: ${JSON.stringify(payload)}`);
 
-      const response$ = client.send<TResponse>(pattern, payload);
-      const result = await firstValueFrom(response$);
+      try {
+        const response$ = client.send<TResponse>(pattern, payload);
 
-      this.logger.debug(`📥 RMQ response ← ${pattern}`);
-      return result;
+        // Add timeout to prevent hanging
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(
+            () => reject(new Error('RabbitMQ request timeout after 10s')),
+            10000,
+          );
+        });
+
+        const result = await Promise.race([
+          firstValueFrom(response$),
+          timeoutPromise,
+        ]);
+
+        this.logger.debug(`📥 RMQ response ← ${pattern}`);
+        this.logger.debug(`📦 Response: ${JSON.stringify(result)}`);
+        return result;
+      } catch (error) {
+        this.logger.error(`❌ RMQ error for ${pattern}:`, error);
+        throw error;
+      }
     });
   }
 
