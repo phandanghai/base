@@ -1,22 +1,37 @@
 image: alpine:latest
 
 stages:
-  - sync
+  - lint
+  - test
+  - build
+  - subtree
+  - push-repo-triggers
 
 variables:
-  GIT_STRATEGY: fetch
+  NODE_VERSION: '22'
 
-sync:packages:
-  stage: sync
-
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      changes:
-        - packages/**/*
-
+default:
+  image: node:22
   before_script:
-    - apk add --no-cache git rsync openssh
+    - node -v
+    - npm ci
+
+cache:
+  paths:
+    - node-modules/
+
+lint:
+  stage: lint
   script:
-    - set -e
-    - echo "Script action ..."
-      fi
+    - pnpm run lint
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "main"'
+      when: on_success
+
+test:
+  stage: test
+  script:
+    - npm run test
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "main"'
+      when: on_success
