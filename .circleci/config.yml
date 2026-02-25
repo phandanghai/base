@@ -1,37 +1,52 @@
-image: alpine:latest
+version: 2.1
 
-stages:
-  - lint
-  - test
-  - build
-  - subtree
-  - push-repo-triggers
+executors:
+  node_executor:
+    docker:
+      - image: cimg/node:22.0
 
-variables:
-  NODE_VERSION: '22'
+jobs:
+  # ======================
+  # 1️⃣ LINT
+  # ======================
+  lint:
+    executor: node_executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run lint
+          command: pnpm run lint
 
-default:
-  image: node:22
-  before_script:
-    - node -v
-    - npm ci
+  # ======================
+  # 2️⃣ TEST
+  # ======================
+  test:
+    executor: node_executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run test
+          command: npm run test
 
-cache:
-  paths:
-    - node-modules/
+workflows:
+  version: 2
 
-lint:
-  stage: lint
-  script:
-    - pnpm run lint
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "main"'
-      when: on_success
+  branch_workflow:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              ignore: main
 
-test:
-  stage: test
-  script:
-    - npm run test
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "main"'
-      when: on_success
+      - test:
+          requires:
+            - lint
+          filters:
+            branches:
+              ignore: main
