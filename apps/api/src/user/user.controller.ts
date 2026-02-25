@@ -5,9 +5,11 @@ import {
   RABBIT_PATTERN,
   RabbitMQService,
   Timeout,
+  UserQuerySchema,
+  UserQueryDto,
 } from '@base/shared';
 import { ZodValidationPipe } from '@base/shared';
-import { Body, Controller, Post, Logger } from '@nestjs/common';
+import { Body, Controller, Post, Logger, Get, Query } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 
 @Controller('users')
@@ -32,19 +34,26 @@ export class UserCotroller {
   async createNewUserRequest(
     @Body(new ZodValidationPipe(CreateUserSchema)) createUserDto: CreateUserDto,
   ) {
-    try {
-      this.logger.log(`Creating user: ${createUserDto.email}`);
+    this.logger.log(`Creating user: ${createUserDto.email}`);
 
-      const result = await this.rabbitMQService.send(
-        RABBIT_PATTERN.USER.CREATE_NEW_USER.pattern,
-        createUserDto,
-      );
+    return await this.rabbitMQService.send(
+      RABBIT_PATTERN.USER.CREATE_NEW_USER.pattern,
+      createUserDto,
+    );
+  }
 
-      this.logger.log(`User created successfully: ${createUserDto.email}`);
-      return result;
-    } catch (error) {
-      this.logger.error(`Failed to create user: ${error.message}`, error.stack);
-      throw error;
-    }
+  @Get('')
+  @Timeout(10000)
+  @ApiResponse(RABBIT_PATTERN.USER.GET_ALL_USERS.description, StatusCodes.OK)
+  async getAllUserRequest(
+    @Query(new ZodValidationPipe(UserQuerySchema)) query: UserQueryDto,
+  ) {
+    this.logger.log('Get all users by filter...');
+    this.logger.debug(`Query params: ${JSON.stringify(query)}`);
+
+    return this.rabbitMQService.send(
+      RABBIT_PATTERN.USER.GET_ALL_USERS.pattern,
+      query,
+    );
   }
 }

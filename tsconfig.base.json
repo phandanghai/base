@@ -7,7 +7,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "removeComments": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "incremental": true,
     "skipLibCheck": true,
     "baseUrl": "./",
